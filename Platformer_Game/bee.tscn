@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://dnej8fv8u4dl3"]
+
+[ext_resource type="Script" path="res://bee.gd" id="1_4lbxq"]
+[ext_resource type="Texture2D" uid="uid://csetcg65bqpmg" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/Enemies/bee/0.png" id="1_mt46n"]
+[ext_resource type="Shader" path="res://flicker.gdshader" id="2_tfqm2"]
+[ext_resource type="Texture2D" uid="uid://cw3l1036ykobt" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/Enemies/bee/1.png" id="4_oc4in"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rgmsw"]
+radius = 3.0
+height = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wik6w"]
+resource_local_to_scene = true
+shader = ExtResource("2_tfqm2")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/amount = 0.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_76ib7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_mt46n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oc4in")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Bee" type="Area2D"]
+collision_layer = 4
+collision_mask = 19
+script = ExtResource("1_4lbxq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_rgmsw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_wik6w")
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_76ib7")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

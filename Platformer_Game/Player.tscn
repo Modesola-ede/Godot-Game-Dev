@@ -1,0 +1,142 @@
+[gd_scene load_steps=14 format=3 uid="uid://dm65crd4q6e7y"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_abeml"]
+[ext_resource type="Texture2D" uid="uid://d0lfyvcxm2dqt" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/player/basic/idle.png" id="1_uk6fw"]
+[ext_resource type="Shader" path="res://flicker.gdshader" id="2_we5cv"]
+[ext_resource type="Texture2D" uid="uid://c858nvymkffd4" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/player/basic/walk.png" id="3_bn2ns"]
+[ext_resource type="Texture2D" uid="uid://debwpekvhqekj" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/player/gun/idle.png" id="3_lvqnq"]
+[ext_resource type="Texture2D" uid="uid://fg2sslgpbeke" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/player/gun/walk.png" id="5_00mx7"]
+[ext_resource type="Texture2D" uid="uid://dhy83uatvo46o" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/bullet/fire.png" id="6_qlyy6"]
+[ext_resource type="AudioStream" uid="uid://casw1sqpgdhw6" path="res://godot-platformer-main/godot-platformer-main/assets/audio/synth_laser_03.ogg" id="8_up4en"]
+[ext_resource type="AudioStream" uid="uid://c8xl6x7cfa8au" path="res://godot-platformer-main/godot-platformer-main/assets/audio/jump.mp3" id="9_7c1kq"]
+[ext_resource type="AudioStream" uid="uid://c6wig6o1neied" path="res://godot-platformer-main/godot-platformer-main/assets/audio/shot_01.ogg" id="10_r3qk3"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_502n4"]
+radius = 5.99996
+height = 16.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5cn8f"]
+resource_local_to_scene = true
+shader = ExtResource("2_we5cv")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/amount = 0.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uk7l0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_uk6fw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lvqnq")
+}],
+"loop": true,
+"name": &"idle_gun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_bn2ns")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_00mx7")
+}],
+"loop": true,
+"name": &"jump_gun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_uk6fw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_bn2ns")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lvqnq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_00mx7")
+}],
+"loop": true,
+"name": &"walk_gun",
+"speed": 5.0
+}]
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("1_abeml")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3.8147e-06)
+scale = Vector2(0.8, 0.8)
+shape = SubResource("CapsuleShape2D_502n4")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(5, 5)
+position_smoothing_enabled = true
+position_smoothing_speed = 12.0
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Cooldown_Timer" type="Timer" parent="Timer"]
+wait_time = 0.6
+one_shot = true
+
+[node name="Fire_Timer" type="Timer" parent="Timer"]
+wait_time = 0.1
+
+[node name="Invisibility_Timer" type="Timer" parent="Timer"]
+wait_time = 0.6
+one_shot = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_5cn8f")
+scale = Vector2(0.95673, 0.821428)
+sprite_frames = SubResource("SpriteFrames_uk7l0")
+animation = &"idle_gun"
+autoplay = "idle"
+
+[node name="Fire" type="Node2D" parent="."]
+
+[node name="FireLeft" type="Sprite2D" parent="Fire"]
+visible = false
+position = Vector2(-10.2, 1)
+texture = ExtResource("6_qlyy6")
+flip_h = true
+
+[node name="FireRight" type="Sprite2D" parent="Fire"]
+visible = false
+position = Vector2(10.2, 1)
+texture = ExtResource("6_qlyy6")
+
+[node name="Node" type="Node" parent="."]
+
+[node name="FireSound" type="AudioStreamPlayer2D" parent="Node"]
+stream = ExtResource("8_up4en")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="Node"]
+stream = ExtResource("9_7c1kq")
+
+[node name="Damage" type="AudioStreamPlayer2D" parent="Node"]
+stream = ExtResource("10_r3qk3")
+
+[connection signal="timeout" from="Timer/Cooldown_Timer" to="." method="_on_cooldown_timer_timeout"]
+[connection signal="timeout" from="Timer/Fire_Timer" to="." method="_on_fire_timer_timeout"]
+[connection signal="timeout" from="Timer/Invisibility_Timer" to="." method="_on_invisibility_timer_timeout"]

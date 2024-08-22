@@ -1,0 +1,82 @@
+[gd_scene load_steps=12 format=3 uid="uid://bjf5vqawp5p00"]
+
+[ext_resource type="Shader" path="res://flicker.gdshader" id="1_ghhfj"]
+[ext_resource type="Texture2D" uid="uid://dqj3k1y045r5s" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/Enemies/worm/0.png" id="1_lvgvj"]
+[ext_resource type="Script" path="res://worm.gd" id="1_p5sn6"]
+[ext_resource type="Texture2D" uid="uid://cnauw58imcfe" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/Enemies/worm/1.png" id="4_va43h"]
+[ext_resource type="AudioStream" uid="uid://c6wig6o1neied" path="res://godot-platformer-main/godot-platformer-main/assets/audio/shot_01.ogg" id="5_abfkv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6r5hv"]
+resource_local_to_scene = true
+shader = ExtResource("1_ghhfj")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/amount = 0.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_67cx8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_lvgvj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_va43h")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fhare"]
+radius = 3.0
+height = 6.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_70alp"]
+size = Vector2(8, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vqb65"]
+size = Vector2(1, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a88de"]
+size = Vector2(1, 1)
+
+[node name="Worm" type="Area2D"]
+collision_layer = 4
+collision_mask = 18
+script = ExtResource("1_p5sn6")
+metadata/_edit_horizontal_guides_ = [2.0]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_6r5hv")
+scale = Vector2(0.5, 0.607143)
+sprite_frames = SubResource("SpriteFrames_67cx8")
+frame = 1
+frame_progress = 0.569405
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_fhare")
+
+[node name="BorderArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BorderArea"]
+shape = SubResource("RectangleShape2D_70alp")
+
+[node name="Leftcliffarea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Leftcliffarea"]
+position = Vector2(-4, 3)
+shape = SubResource("RectangleShape2D_vqb65")
+
+[node name="Rightcliffarea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rightcliffarea"]
+position = Vector2(4, 3)
+shape = SubResource("RectangleShape2D_a88de")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_abfkv")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="BorderArea" to="." method="_on_border_area_body_entered"]
+[connection signal="body_exited" from="Leftcliffarea" to="." method="_on_leftcliffarea_body_exited"]
+[connection signal="body_exited" from="Rightcliffarea" to="." method="_on_rightcliffarea_body_exited"]

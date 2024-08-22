@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dneobm6ynkx3u"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_pj6gm"]
+[ext_resource type="Texture2D" uid="uid://byqbs7ia4qig4" path="res://godot-platformer-main/godot-platformer-main/assets/graphics/bullet/bullet.png" id="1_s0xpu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_suwsm"]
+size = Vector2(12, 6)
+
+[node name="Bullet" type="Area2D"]
+collision_layer = 16
+collision_mask = 4
+script = ExtResource("1_pj6gm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_s0xpu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_suwsm")

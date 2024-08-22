@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://chiecb5x6cion"]
+
+[ext_resource type="PackedScene" uid="uid://c054uyv0cv2j5" path="res://level_1.tscn" id="1_33102"]
+[ext_resource type="Script" path="res://game.gd" id="1_j5ue0"]
+[ext_resource type="PackedScene" uid="uid://ddtu103d7w8y2" path="res://ui.tscn" id="3_1jl8d"]
+[ext_resource type="AudioStream" uid="uid://bvmmdholo8cjt" path="res://godot-platformer-main/godot-platformer-main/assets/audio/bg_music.ogg" id="4_iq2kc"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_j5ue0")
+
+[node name="Level1" parent="." instance=ExtResource("1_33102")]
+position = Vector2(0, -1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.988235, 0.87451, 0.803922, 1)
+
+[node name="UI" parent="." instance=ExtResource("3_1jl8d")]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_iq2kc")
+autoplay = true
